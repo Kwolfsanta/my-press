@@ -267,7 +267,7 @@ module.exports = defineConfig({
 ok，那既然如此，我们就来进行按需加载
 
 ### 按需引入
-以下的方法仅针对`element-ui`，部分场景可能
+以下的方法仅针对`element-ui`，其它场景也会有各自的做法，可以自行查阅
 1. 安装`babel-plugin-component`
 ```shell
 npm install babel-plugin-component -D
@@ -356,13 +356,13 @@ server {
 修改完nginx的配置之后，我们再`main.js`中解除element-ui引入的注释，并在`App.vue`里去除script标签，将`Button`改回`el-button`并进行打包。这个时候打包出来的文件由于`babel-plugin-component`的作用，虽然不会有之前800+k那么大，但是也有足足700k。我们仔细看命令行的打包文件提示，会发现最右边那一列是打包文件进行gzipped之后的大小
 <img src="./images/gzipped-0.png">
 
-此时将文件上传到开启了nginx的服务器之后，我们再次打开浏览器以及F12，就会发现JS仅仅加载了200k。
+此时将文件上传到开启了gzip的服务器之后，我们再次打开浏览器以及F12，就会发现JS仅仅加载了200k。
 <img src="./images/gzipped-js-0.png">
 点进去js的请求之后，会发现响应头中有一个`Content-Encoding: gzip`，这就表示gzip开启并且已经成功作用了
 <img src="./images/gzipped-tip-0.png">
 :::tip brotli
 题外话，大家可能都知道gzip压缩，但其实gzip并不是效率最高的压缩。实际上还有另一种压缩格式是`brotli`，相对于gzip来说，这种格式更新，兼容性也就没有那么好。但说是这么说，实际上已经有蛮多网站在应用了，比如腾讯云、阿里云之类的cdn加速服务商，还有[爱奇艺网站](iqiyi.com)里的百度自动推送功能的js(push.js)，点开能看到该js有个响应头`content-encoding:br`，这也就是开启了brotli压缩。
-具体可以参考
+具体可以参考  
 https://juejin.cn/post/6966035328704446500
 https://opensource.googleblog.com/2015/09/introducing-brotli-new-compression.html
 https://github.com/google/brotli/
@@ -479,8 +479,10 @@ module.exports = {
 <img src="./images/build-full-desktop.png">  
 
 ## SSR方案 
-> 官方文档请参考这里https://v2.ssr.vuejs.org/#why-ssr
-ssr本身也是优秀的首屏解决方案，由于请求之后返回的直接就是html，这就使得页面加载异常地快（不需要等待js去执行渲染DOM元素）。
+> 官方文档请参考这里https://v2.ssr.vuejs.org/#why-ssr  
+
+ssr本身也是优秀的首屏解决方案，由于请求之后返回的直接就是html，这就使得页面加载异常地快（不需要等待js去执行渲染DOM元素）。  
+
 大家可以直接跟着[起步文档](https://v2.ssr.vuejs.org/guide/#installation)来进行操作，这里我就不继续赘述了，毕竟我本人只用过`Nuxt`进行开发，没有过将vue项目通过`vue-server-renderer`进行改造的经历
 
 
