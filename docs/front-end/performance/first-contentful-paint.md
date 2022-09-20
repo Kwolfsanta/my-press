@@ -1,3 +1,5 @@
+> 本文项目仓库地址：https://github.com/evankwolf/vue-fcp-example
+
 首先，我们需要了解一下`首屏渲染`是个什么东西
 
 大家可以这么想象一下——
