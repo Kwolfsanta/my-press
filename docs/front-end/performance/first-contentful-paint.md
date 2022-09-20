@@ -18,7 +18,7 @@
 
 > **The First Contentful Paint** time stamp is when the browser first rendered any text, image (including background images), video, canvas that had been drawn into, or non-empty SVG. This excludes any content of iframes, but includes text with pending webfonts. This is the first time users could start consuming page content.  
 
-### 示例项目初始化
+## 示例项目初始化
 那么接下来在我们谈优化的方法之前，先直接使用[`vue-cli`](https://cli.vuejs.org/zh/guide/)去初始化一个项目  
 ```shell
 vue create vue-fcp-example
@@ -123,7 +123,7 @@ nav a.router-link-exact-active {
 
 那既然如此，我们就来说几个`Vue`项目中经常使用到首屏加载的优化的方法  
 
-### 路由懒加载/动态导入
+## 路由懒加载/动态导入
 现在我们先来回想一下平常在路由里面我们会怎么添加一个路由
 ```js
 import Vue from 'vue'
@@ -216,10 +216,10 @@ router.onError((error) => {
 })
 ```
 
-### 分析依赖大小，按需加载
+## 分析依赖大小，按需加载
 说实在的，一次性引入所有路由确实是一笔开销，但是我们手写的各个`.vue`文件加起来可能也不会太大，那么这个时候我们一定会想知道到底是什么玩意儿这么大，那就让我们先来分析一下  
 
-#### 安装`webpack-bundle-analyzer`
+### 安装`webpack-bundle-analyzer`
 使用`webpack`进行构建的项目都可以安装一个这个插件，使用方法也很简单
 1. 安装插件
 ```shell
@@ -269,7 +269,7 @@ module.exports = defineConfig({
 
 ok，那既然如此，我们就来进行按需加载
 
-#### 按需引入
+### 按需引入
 以下的方法仅针对`element-ui`，部分场景可能
 1. 安装`babel-plugin-component`
 ```shell
@@ -338,11 +338,11 @@ export default {
 这个时候我们再打开`report.html`，就能看到之前大得离谱得`element-ui`已经消失不见了
 <img src="./images/build-report-by-needs.png">
 
-### 开启gzip
+## 开启gzip
 
-### cdn引入依赖
-### 切分打包文件数量
+## cdn引入依赖
+## 切分打包文件数量
 
-### 字体保持可见
+## 字体保持可见
 
-### SSR方案 
+## SSR方案 
