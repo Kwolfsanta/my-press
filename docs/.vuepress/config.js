@@ -1,4 +1,5 @@
 module.exports = {
+  base: '/press/',
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
