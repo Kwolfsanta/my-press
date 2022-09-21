@@ -487,4 +487,121 @@ ssr本身也是优秀的首屏解决方案，由于请求之后返回的直接�
 
 大家可以直接跟着[起步文档](https://v2.ssr.vuejs.org/guide/#installation)来进行操作，这里我就不继续赘述了，毕竟我本人只用过`Nuxt`进行开发，没有过将vue项目通过`vue-server-renderer`进行改造的经历
 
+## Nuxt
+### 初始化项目
+```shell
+npx create-nuxt-app nuxt-fcp-example
+```
+```shell
+? Project name: nuxt-fcp-example
+? Programming language: JavaScript
+? Package manager: Npm
+? UI framework: Element
+? Nuxt.js modules: Axios - Promise based HTTP client
+? Linting tools: ESLint, Lint staged files, Commitlint
+? Rendering mode: (Use arrow keys)
+? Rendering mode: Universal (SSR / SSG)
+? Deployment target: Static (Static/Jamstack hosting) # 部署方式，当然你也可以选择Node.js部署，只不过我这里不多做介绍了
+? Development tools: jsconfig.json #(Recommended for VS Code if you're not using typescript)
+? Continuous integration: None
+? Version control system: Git
+```  
 
+初始化完成之后，我们cd到目录里面，运行`npm run dev`。这个时候打开localhost:3000/应该就如下图所示
+<img src="./imges/../images/nuxt-dev-0.png">
+
+这个时候我们就可以像开发vue一样在nuxt中进行开发了。值得一提的是，[nuxt2](https://nuxtjs.org/)是在vue2的基础上制作的ssr框架，而[nuxt3](https://v3.nuxtjs.org/)则是在vue3的基础上制作的框架，两者并不兼容，写法上有一定的区别。望周知。  
+
+由于Nuxt是根据`/pages`目录自动生成文件夹的，因此我们不需要再手动去写`router`的各种配置了。  
+
+我们首先需要一个layout层，在`/layouts/default.vue`中，我们会把原来`App.vue`的内容迁移过来。同时在Nuxt中我们不使用`router-link`转而使用`NuxtLink`，并且用`Nuxt`元素表示实际渲染出来的当前页面的内容，有一点像`router-view`，只不过是最顶级的`router-view`
+```vue
+<template>
+  <div id="app">
+    <nav>
+      <!-- <router-link to="/"><Button type="primary">Home</Button></router-link> |
+      <router-link to="/about"><Button type="primary">About</Button></router-link> -->
+      <NuxtLink to="/">
+        <el-button type="primary">
+          Home
+        </el-button>
+      </NuxtLink> |
+      <NuxtLink to="/about">
+        <el-button type="primary">
+          About
+        </el-button>
+      </NuxtLink>
+    </nav>
+    <Nuxt />
+  </div>
+</template>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+nav {
+  padding: 30px;
+}
+
+nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+nav a.router-link-exact-active {
+  color: #42b983;
+}
+</style>
+
+```  
+根据两个NuxtLink的元素的路径，我们需要在`/pages`目录下新建两个文件，分别为`index.vue`和`about.vue`，这样Nuxt会自动帮我们生成两个路径分别对应`/`和`/about`。另外由于`/pages/index.vue`中引入了`HelloWorld`组件，因此我们也需要把组件复制过来到该项目里
+```vue
+<!-- index.vue -->
+<template>
+  <div class="home">
+    <img alt="Vue logo" src="/images/logo.png">
+    <HelloWorld msg="Welcome to Your Vue.js App" />
+  </div>
+</template>
+
+<script>
+// @ is an alias to /src
+import HelloWorld from '../components/HelloWorld.vue'
+
+export default {
+  name: 'HomeView',
+  components: {
+    HelloWorld
+  }
+}
+</script>
+
+```  
+
+```vue
+<!-- about.vue -->
+<template>
+  <div class="about">
+    <h1>This is an about page</h1>
+  </div>
+</template>
+
+```  
+
+由于之前初始化项目的时候选择了`Element`作为框架，因此在`nuxt.config.js`中能够看到`element-ui`相关的配置已经由脚手架帮我们做好了，所以`el-button`此时也自然而然地能渲染出来了。现在再打开页面就跟之前在`vue-cli`里一样了
+<img src="./images/nuxt-dev-1.png">  
+
+如果需要使用`ssr`的话，需要使用`npm run build`，由于我这里仅打算静态部署，因此使用`npm run generate`生成静态的`dist`文件夹。另外由于我是打算部署在服务器的/fcp-nuxt目录下，因此我在`nuxt.config.js`中更改了一个设置
+```js
+// nuxt.config.js
+  build: {
+    publicPath: '/fcp-nuxt',
+    transpile: [/^element-ui/]
+  }
+```
